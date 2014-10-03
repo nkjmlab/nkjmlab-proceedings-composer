@@ -1,0 +1,11 @@
+.paper{
+  border:1px solid #ddd;
+  padding: 0.5em; 0;
+}
+.author{
+  font-style: italic;
+  float:left;
+}
+.start_page{
+  text-align: right;
+}
