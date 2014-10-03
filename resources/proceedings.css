@@ -1,5 +1,8 @@
+img{
+  max-width: 100%;
+}
+
 .paper{
-  border:1px solid #ddd;
   padding: 0.5em; 0;
 }
 .author{
@@ -8,4 +11,28 @@
 }
 .start_page{
   text-align: right;
+}
+
+body{
+  max-width: 800px;
+  margin:auto;
+  border:1px solid #ddd;
+}
+
+.front_cover, .back_cover{
+  padding: 1em 2em;
+  text-align: center;
+  margin: 1em 0;
+}
+
+.front_cover{
+    border-bottom: 1px solid #ddd;
+}
+
+.back_cover{
+    border-top: 1px solid #ddd;
+}
+
+
+.toc{
 }
