@@ -64,7 +64,8 @@ public class ProceedingsComposer {
 				new File(resourcesDir + "proceedings.csv"));
 
 		FileWriter writer = new FileWriter(new File(outDir + "index.html"));
-		writer.write("<link rel='stylesheet' href='proceedings.css' />");
+		writer.write("<!DOCTYPE html>\n");
+		writer.write("<head><link rel='stylesheet' href='proceedings.css' /></head>\n<body>\n");
 		int offset = 1;
 		for (PaperInfo p : papers) {
 			p.startPage = offset;
@@ -105,6 +106,7 @@ public class ProceedingsComposer {
 			doc.close();
 			offset += allPages.size();
 		}
+		writer.write("</body>\n");
 		writer.close();
 		System.out.println("Composed proceedings is in " + outDir);
 	}
