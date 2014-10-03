@@ -59,3 +59,13 @@ index.html
 ```
 
 ``proceedings.css``の内容は必要に応じて書きかえて下さい．
+
+## スクリーンショット
+<img src="http://i.gyazo.com/e3f2ee36890787cbbc7efc29b83a521f.png">
+
+HTML形式の目次が出来ます．
+
+<img src="http://i.gyazo.com/d53093aa2d84be8d65962916d1c8f9a1.png">
+
+PDFに連番のページ番号が入ります．
+
