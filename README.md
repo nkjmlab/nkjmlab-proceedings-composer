@@ -1,5 +1,15 @@
 # SimpleProceedingsComposerの利用
-## 設定ファイルの準備
+
+## 概要
+論文リストをあたえることで，<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/proceedings-sample.zip">proceedings-sample.zip</a>の様なプロシーディングスを作成するプログラムです．
+
+主な機能は以下です．
+
+* 複数のPDFファイルに掲載順にページ番号を書き込む
+* PDFファイルへのリンクを含むHTML形式の目次を作成する．
+
+## 使い方
+### 設定ファイルの準備
 ``resources/proceedings.sample.csv``を``resources/proceedings.csv``にコピーして，プロシーディングスに入れたい論文情報を入力して下さい．
 
 1行目はヘッダ行です．2行目以下にプロシーティングスに掲載したい論文情報を**掲載順**に入れてください．フィールドの値にカンマが含まれる場合はフィールドの値をダブルクォーテーションで囲って下さい．
@@ -15,7 +25,7 @@ sample11.pdf,"HogeHoge","yuu_nkjm_2, yuu_nkjm_3"
 sample08.pdf,"FugaFuga","yuu_nkjm_2, yuu_nkjm_4"
 ```
 
-## プロシーディングスの作成
+### プロシーディングスの作成
 ``compose.bat``を実行して下さい．``proceedings``ディレクトリ以下に作成日時に応じたディレクトリが作成され，その中に以下の構造でプロシーディングスが作成されます．
 
 ```
