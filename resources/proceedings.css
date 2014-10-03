@@ -14,25 +14,27 @@ img{
 }
 
 body{
+  background-color: #f7f7f7;
   max-width: 800px;
   margin:auto;
+}
+
+#proceedings{
+  margin: 1em;  
+  background-color: #fff;
   border:1px solid #ddd;
 }
 
-.front_cover, .back_cover{
+header, footer{
   padding: 1em 2em;
   text-align: center;
-  margin: 1em 0;
 }
 
-.front_cover{
-    border-bottom: 1px solid #ddd;
+header{
+  border-bottom: 1px solid #f7f7f7;
 }
 
-.back_cover{
-    border-top: 1px solid #ddd;
+footer{
+  border-top: 1px solid #f7f7f7;
 }
 
-
-.toc{
-}

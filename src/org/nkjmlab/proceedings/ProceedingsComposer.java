@@ -46,7 +46,6 @@ public class ProceedingsComposer {
 		}
 	}
 
-
 	private void compose(String resourcesDir, String outDir)
 			throws IOException, COSVisitorException {
 
@@ -66,9 +65,9 @@ public class ProceedingsComposer {
 
 		FileWriter writer = new FileWriter(new File(outDir + "index.html"));
 		writer.write("<!DOCTYPE html>\n");
-		writer.write("<head><link rel='stylesheet' href='proceedings.css' /></head>\n<body>\n");
-		writer.write("<section class='front_cover'></section>\n");
-
+		writer.write("<head><link rel='stylesheet' href='proceedings.css' />\n<title>Proceedings</title>\n</head>\n<body>\n");
+		writer.write("<section id='proceedings'>\n");
+		writer.write("<header></header>\n");
 		writer.write("<section class='toc'>\n");
 		int offset = 1;
 		for (PaperInfo p : papers) {
@@ -111,7 +110,8 @@ public class ProceedingsComposer {
 			offset += allPages.size();
 		}
 		writer.write("</section>\n");
-		writer.write("<section class='back_cover'></section>\n");
+		writer.write("<footer></footer>\n");
+		writer.write("</section>\n");
 		writer.write("</body>\n");
 		writer.close();
 		System.out.println("Composed proceedings is in " + outDir);
