@@ -1,5 +1,7 @@
 package org.nkjmlab.proceedings;
 
+import java.io.File;
+
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvEntity;
 
@@ -12,17 +14,17 @@ public class PaperInfo {
 	@CsvColumn(name = "author")
 	public String author;
 
-	@CsvColumn(name = "fileName")
-	public String fileName;
+	@CsvColumn(name = "filePath")
+	public String filePath;
 
 	public int startPage = -1;
 
 	public String toTocItem() {
 		String str = "<div class='paper'>\n" + "<div class='title'>"
-				+ "<a href='papers/" + fileName + "'>" + title + "</a></div>\n"
-				+ "<div class='author'>" + author + "</div>\n"
-				+ "<div class='start_page'>" + startPage + "</div>\n"
-				+ "</div>\n";
+				+ "<a href='papers/" + new File(filePath).getName() + "'>"
+				+ title + "</a></div>\n" + "<div class='author'>" + author
+				+ "</div>\n" + "<div class='start_page'>" + startPage
+				+ "</div>\n" + "</div>\n";
 		return str;
 	}
 }

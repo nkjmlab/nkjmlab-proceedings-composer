@@ -24,29 +24,30 @@ public class ProceedingsComposer {
 
 	public static void main(String[] args) {
 
+		if (args.length != 1) {
+			System.out.println("\n[USAGE]");
+			System.out.println("compose.bat filename");
+			System.out.println("ex. compose.bat sample/proceedings.csv");
+			return;
+		}
+
+		String csvFile = args[0];
+
 		ProceedingsComposer composer = new ProceedingsComposer();
 		try {
 			String resourcesDir = "resources/";
 
-			String outDir = "proceedings/"
+			String outDir = "proceedings-"
 					+ new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
 							.format(new Date()) + "/";
 
-			if (!Files.exists(Paths.get(resourcesDir + "proceedings.csv"))) {
-				System.err.println("You must create '" + resourcesDir
-						+ "proceedings.csv'.");
-				System.err.println("Sample is '" + resourcesDir
-						+ "proceedings.sample.csv'");
-				return;
-			}
-
-			composer.compose(resourcesDir, outDir);
+			composer.compose(csvFile, resourcesDir, outDir);
 		} catch (COSVisitorException | IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void compose(String resourcesDir, String outDir)
+	private void compose(String csvFile, String resourcesDir, String outDir)
 			throws IOException, COSVisitorException {
 
 		Files.createDirectories(Paths.get(outDir + "/papers/"));
@@ -61,7 +62,7 @@ public class ProceedingsComposer {
 		cfg.setIgnoreTrailingWhitespaces(true); // 項目値後のホワイトスペースを除去します。
 		CsvEntityManager manager = new CsvEntityManager(cfg);
 		List<PaperInfo> papers = manager.load(PaperInfo.class).from(
-				new File(resourcesDir + "proceedings.csv"));
+				new File(csvFile));
 
 		FileWriter writer = new FileWriter(new File(outDir + "index.html"));
 		writer.write("<!DOCTYPE html>\n");
@@ -76,7 +77,7 @@ public class ProceedingsComposer {
 			// System.out.println(p.toTocItem());
 			writer.write(p.toTocItem());
 
-			File f = new File(resourcesDir + p.fileName);
+			File f = new File(p.filePath);
 
 			PDDocument doc = PDDocument.load(f);
 
@@ -105,7 +106,8 @@ public class ProceedingsComposer {
 				contentStream.endText();
 				contentStream.close();
 			}
-			doc.save(new File(outDir + "papers/" + p.fileName));
+			doc.save(new File(outDir + "papers/"
+					+ new File(p.filePath).getName()));
 			doc.close();
 			offset += allPages.size();
 		}
