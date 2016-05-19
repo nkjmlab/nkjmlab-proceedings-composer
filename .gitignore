@@ -1,2 +1,4 @@
 /resources/proceedings.csv
 /proceedings/*
+/bin/
+/target/
