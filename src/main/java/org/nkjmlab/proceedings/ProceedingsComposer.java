@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -16,71 +17,68 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.manager.CsvEntityManager;
 
 public class ProceedingsComposer {
+	protected static transient org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
+			.getLogger();
 
 	public static void main(String[] args) {
 
 		if (args.length != 1) {
-			System.out.println("\n[USAGE]");
-			System.out.println("compose.bat filename");
-			System.out.println("ex. compose.bat sample/proceedings.csv");
+			log.debug("\n[USAGE]");
+			log.debug("compose.bat filename");
+			log.debug("ex. compose.bat sample/proceedings.csv");
 			return;
 		}
 
 		String csvFile = args[0];
 
 		ProceedingsComposer composer = new ProceedingsComposer();
+		composer.compose(csvFile);
+	}
+
+	private void compose(String csvFile) {
 		try {
-			String resourcesDir = "src/main/resources/css/";
+			Path outDir = new File(
+					"proceedings-" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
+							.format(new Date())).toPath();
+			Files.createDirectories(
+					new File(outDir.toFile(), "/papers/").toPath());
+			copyCssFile(outDir);
 
-			String outDir = "proceedings-"
-					+ new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
-							.format(new Date()) + "/";
+			File outFile = new File(outDir.toFile(), "index.html");
+			FileUtils.copyInputStreamToFile(
+					getClass().getResourceAsStream("/index.html"), outFile);
 
-			composer.compose(csvFile, resourcesDir, outDir);
-		} catch (COSVisitorException | IOException e) {
-			e.printStackTrace();
+			Document document = Jsoup.parse(outFile, "UTF-8");
+			procPdfs(document, csvFile, outDir);
+
+			writeResult(document, outFile);
+			log.debug("Composed proceedings is in " + outDir);
+		} catch (IOException e) {
+			log.error(e, e);
+			throw new RuntimeException();
 		}
 	}
 
-	private void compose(String csvFile, String resourcesDir, String outDir)
-			throws IOException, COSVisitorException {
-
-		Files.createDirectories(Paths.get(outDir + "/papers/"));
-
-		Files.copy(Paths.get(resourcesDir + "proceedings.css"),
-				Paths.get(outDir + "proceedings.css"));
-
-		CsvConfig cfg = new CsvConfig();
-		cfg.setQuoteDisabled(false); // デフォルトでは無効となっている囲み文字を有効にします。
-		cfg.setIgnoreEmptyLines(true); // 空行を無視するようにします。
-		cfg.setIgnoreLeadingWhitespaces(true); // 項目値前のホワイトスペースを除去します。
-		cfg.setIgnoreTrailingWhitespaces(true); // 項目値後のホワイトスペースを除去します。
-		CsvEntityManager manager = new CsvEntityManager(cfg);
-		List<PaperInfo> papers = manager.load(PaperInfo.class).from(
-				new File(csvFile));
-
-		FileWriter writer = new FileWriter(new File(outDir + "index.html"));
-		writer.write("<!DOCTYPE html>\n");
-		writer.write("<head><link rel='stylesheet' href='proceedings.css' />\n<title>Proceedings</title>\n</head>\n<body>\n");
-		writer.write("<section id='proceedings'>\n");
-		writer.write("<header></header>\n");
-		writer.write("<section class='toc'>\n");
+	private void procPdfs(Document document, String csvFile, Path outDir) {
 		int offset = 1;
-		for (PaperInfo p : papers) {
+		for (PaperInfo p : readPapers(csvFile)) {
 			p.startPage = offset;
-			System.out.println("Start page " + p.startPage);
-			// System.out.println(p.toTocItem());
-			writer.write(p.toTocItem());
+			log.debug("Start page {}", p.startPage);
+			log.debug(p.toTocItem());
+			document.getElementById("toc").append(p.toTocItem());
+			offset += procPdf(p, offset, outDir);
+		}
+	}
 
-			File f = new File(p.filePath);
-
-			PDDocument doc = PDDocument.load(f);
-
+	private int procPdf(PaperInfo p, int offset, Path outDir) {
+		try (PDDocument doc = PDDocument.load(new File(p.filePath))) {
 			List<?> allPages = doc.getDocumentCatalog().getAllPages();
 			PDFont font = PDType1Font.HELVETICA_BOLD;
 			float fontSize = 9.0f;
@@ -89,14 +87,14 @@ public class ProceedingsComposer {
 				String footerMsg = String.valueOf(offset + i);
 				PDPage page = (PDPage) allPages.get(i);
 				PDRectangle pageSize = page.findMediaBox();
-				float fotterMsgWidth = font.getStringWidth(footerMsg)
-						* fontSize / 1000f;
+				float fotterMsgWidth = font.getStringWidth(footerMsg) * fontSize
+						/ 1000f;
 				float pageWidth = pageSize.getWidth();
 				double centeredXPosition = (pageWidth - fotterMsgWidth) / 2f;
 				double bottomYPosition = 30;
 
-				PDPageContentStream contentStream = new PDPageContentStream(
-						doc, page, true, true, true);
+				PDPageContentStream contentStream = new PDPageContentStream(doc,
+						page, true, true, true);
 				contentStream.beginText();
 				contentStream.setFont(font, fontSize);
 				contentStream.setNonStrokingColor(0, 0, 0);
@@ -106,16 +104,50 @@ public class ProceedingsComposer {
 				contentStream.endText();
 				contentStream.close();
 			}
-			doc.save(new File(outDir + "papers/"
-					+ new File(p.filePath).getName()));
-			doc.close();
-			offset += allPages.size();
+			doc.save(new File(new File(outDir.toFile(), "papers"),
+					new File(p.filePath).getName()));
+			return allPages.size();
+		} catch (IOException | COSVisitorException e) {
+			log.error(e, e);
+			throw new RuntimeException();
 		}
-		writer.write("</section>\n");
-		writer.write("<footer></footer>\n");
-		writer.write("</section>\n");
-		writer.write("</body>\n");
-		writer.close();
-		System.out.println("Composed proceedings is in " + outDir);
+	}
+
+	private void writeResult(Document document, File outFile) {
+		try (FileWriter writer = new FileWriter(outFile)) {
+			writer.write(document.toString());
+		} catch (IOException e) {
+			log.error(e, e);
+			throw new RuntimeException();
+		}
+
+	}
+
+	private void copyCssFile(Path outDir) {
+		try {
+
+			FileUtils.copyInputStreamToFile(
+					ProceedingsComposer.class
+							.getResourceAsStream("/css/proceedings.css"),
+					new File(outDir.toFile(), "proceedings.css"));
+		} catch (IOException e) {
+			log.error(e, e);
+		}
+
+	}
+
+	private List<PaperInfo> readPapers(String csvFile) {
+		CsvConfig cfg = new CsvConfig();
+		cfg.setQuoteDisabled(false); // デフォルトでは無効となっている囲み文字を有効にします。
+		cfg.setIgnoreEmptyLines(true); // 空行を無視するようにします。
+		cfg.setIgnoreLeadingWhitespaces(true); // 項目値前のホワイトスペースを除去します。
+		cfg.setIgnoreTrailingWhitespaces(true); // 項目値後のホワイトスペースを除去します。
+		CsvEntityManager manager = new CsvEntityManager(cfg);
+		try {
+			return manager.load(PaperInfo.class).from(new File(csvFile));
+		} catch (IOException e) {
+			log.error(e, e);
+			throw new RuntimeException();
+		}
 	}
 }

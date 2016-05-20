@@ -1,2 +1,2 @@
-java -cp lib/* org.nkjmlab.proceedings.ProceedingsComposer %~1
+java -cp contrib/* org.nkjmlab.proceedings.ProceedingsComposer %~1
 PAUSE
