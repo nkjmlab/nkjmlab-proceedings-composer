@@ -24,7 +24,7 @@ import com.orangesignal.csv.CsvConfig;
 import com.orangesignal.csv.manager.CsvEntityManager;
 
 public class ProceedingsComposer {
-	protected static transient org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
+	protected static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
 			.getLogger();
 
 	public static void main(String[] args) {

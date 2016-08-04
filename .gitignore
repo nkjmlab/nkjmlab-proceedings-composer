@@ -1,4 +1,20 @@
+*.class
+
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+/tmp
+/.settings
+/target
+.classpath
+.project
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+target
+
 /resources/proceedings.csv
 /proceedings/*
-/bin/
 /target/
