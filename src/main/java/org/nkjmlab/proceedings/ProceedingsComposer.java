@@ -42,7 +42,11 @@ public class ProceedingsComposer {
 		composer.compose(csvFile);
 	}
 
-	private void compose(String csvFile) {
+	public void compose(String csvFile) {
+		compose(readPapers(csvFile));
+	}
+
+	public void compose(List<PaperInfo> papersInfo) {
 		try {
 			Path outDir = new File(
 					"proceedings-" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
@@ -56,7 +60,7 @@ public class ProceedingsComposer {
 					getClass().getResourceAsStream("/index.html"), outFile);
 
 			Document document = Jsoup.parse(outFile, "UTF-8");
-			procPdfs(document, csvFile, outDir);
+			procPdfs(document, papersInfo, outDir);
 
 			writeResult(document, outFile);
 			log.debug("Composed proceedings is in " + outDir);
@@ -66,9 +70,9 @@ public class ProceedingsComposer {
 		}
 	}
 
-	private void procPdfs(Document document, String csvFile, Path outDir) {
+	private void procPdfs(Document document, List<PaperInfo> papersInfo, Path outDir) {
 		int offset = 1;
-		for (PaperInfo p : readPapers(csvFile)) {
+		for (PaperInfo p : papersInfo) {
 			p.startPage = offset;
 			log.debug("Start page {}", p.startPage);
 			log.debug(p.toTocItem());
@@ -78,7 +82,7 @@ public class ProceedingsComposer {
 	}
 
 	private int procPdf(PaperInfo p, int offset, Path outDir) {
-		try (PDDocument doc = PDDocument.load(new File(p.filePath))) {
+		try (PDDocument doc = PDDocument.load(new File(p.getFilepath()))) {
 			List<?> allPages = doc.getDocumentCatalog().getAllPages();
 			PDFont font = PDType1Font.HELVETICA_BOLD;
 			float fontSize = 9.0f;
@@ -105,7 +109,7 @@ public class ProceedingsComposer {
 				contentStream.close();
 			}
 			doc.save(new File(new File(outDir.toFile(), "papers"),
-					new File(p.filePath).getName()));
+					new File(p.getFilepath()).getName()));
 			return allPages.size();
 		} catch (IOException | COSVisitorException e) {
 			log.error(e, e);
@@ -136,7 +140,7 @@ public class ProceedingsComposer {
 
 	}
 
-	private List<PaperInfo> readPapers(String csvFile) {
+	public List<PaperInfo> readPapers(String csvFile) {
 		CsvConfig cfg = new CsvConfig();
 		cfg.setQuoteDisabled(false); // デフォルトでは無効となっている囲み文字を有効にします。
 		cfg.setIgnoreEmptyLines(true); // 空行を無視するようにします。

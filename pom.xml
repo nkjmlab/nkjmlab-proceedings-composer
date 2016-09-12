@@ -2,7 +2,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>nkjmlab-proceedings-composer</artifactId>
-	<name>${project.artifactId}</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<parent>
 		<groupId>org.nkjmlab</groupId>
@@ -14,14 +13,27 @@
 			<id>nkjmlab-public</id>
 			<url>http://maven.nkjmlab.org/nexus/content/groups/public</url>
 		</repository>
+		<repository>
+			<id>nkjmlab-public-mirror</id>
+			<url>http://mirror.maven.nkjmlab.org/nexus/content/groups/public</url>
+		</repository>
 	</repositories>
 	<scm>
-		<connection>scm:git:git@github.com:nkjmlab/nkjmlab-proceedings-composer.gitt</connection>
-		<developerConnection>scm:git:git@github.com:yuu-nkjm/SimpleProceedingsComposer.git</developerConnection>
+		<connection>scm:git:git@github.com:nkjmlab/nkjmlab-proceedings-composer.git</connection>
 		<url>https://github.com/nkjmlab/nkjmlab-proceedings-composer</url>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
+		<dependency>
+			<groupId>org.nkjmlab</groupId>
+			<artifactId>nkjmlab-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.nkjmlab</groupId>
+			<artifactId>nkjmlab-gdata</artifactId>
+			<version>0.0.3-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -58,12 +70,4 @@
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

@@ -19,12 +19,12 @@
 
 1行目はヘッダ行です．2行目以下にプロシーティングスに掲載したい論文情報を**掲載順**に入れてください．フィールドの値にカンマが含まれる場合はフィールドの値をダブルクォーテーションで囲って下さい．
 
-``filePath``フィールドには，``compose.bat``を起点とした相対パスで論文ファイルへのパスを書いて下さい．``title``フィールドには論文タイトルを，``author``フィールドには著者名を入力して下さい．
+``filepath``フィールドには，``compose.bat``を起点とした相対パスで論文ファイルへのパスを書いて下さい．``title``フィールドには論文タイトルを，``author``フィールドには著者名を入力して下さい．
 
 以下は``sample/proceedings.csv``の中身です．
 
 ```
-filePath,title,author
+filepath,title,author
 sample/pdf/sample01.pdf,"FooBar","yuu_nkjm_1, yuu_nkjm_2"
 sample/pdf/sample11.pdf,"HogeHoge","yuu_nkjm_2, yuu_nkjm_3"
 sample/pdf/sample08.pdf,"FugaFuga","yuu_nkjm_2, yuu_nkjm_4"

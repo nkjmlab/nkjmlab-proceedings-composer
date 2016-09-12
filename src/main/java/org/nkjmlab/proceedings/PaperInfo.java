@@ -9,22 +9,46 @@ import com.orangesignal.csv.annotation.CsvEntity;
 public class PaperInfo {
 
 	@CsvColumn(name = "title")
-	public String title;
+	private String title;
 
 	@CsvColumn(name = "author")
-	public String author;
+	private String author;
 
-	@CsvColumn(name = "filePath")
-	public String filePath;
+	@CsvColumn(name = "filepath")
+	private String filepath;
 
 	public int startPage = -1;
 
 	public String toTocItem() {
 		String str = "<div class='paper'>\n" + "<div class='title'>"
-				+ "<a href='papers/" + new File(filePath).getName() + "'>"
-				+ title + "</a></div>\n" + "<div class='author'>" + author
+				+ "<a href='pdf/" + new File(getFilepath()).getName() + "'>"
+				+ getTitle() + "</a></div>\n" + "<div class='author'>" + getAuthor()
 				+ "</div>\n" + "<div class='start_page'>" + startPage
 				+ "</div>\n" + "</div>\n";
 		return str;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filePath) {
+		this.filepath = filePath;
 	}
 }
