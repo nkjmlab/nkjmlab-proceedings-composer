@@ -15,7 +15,7 @@ public class ProceedingsComposerExecutorWithGoogleSpreadsheet {
 		WorksheetServiceClient worksheet = factory
 				.createWorksheetServiceClient("JAWS2016プログラム.xlsx", "proceedings");
 
-		new ProceedingsComposer().compose(worksheet.rows(PaperInfo.class));
+		new ProceedingsComposer().compose(worksheet.rows(PaperDescription.class));
 	}
 
 }

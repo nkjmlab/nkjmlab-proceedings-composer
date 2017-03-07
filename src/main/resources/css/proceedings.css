@@ -17,6 +17,7 @@
   padding: 1em;
 }
 
+
 h1, h2{
   text-align: center;
 }
@@ -47,8 +48,7 @@ body{
 }
 
 #proceedings{
-  margin: 1em 0em;
-  padding: 0em 1em;
+  margin: 1em;  
   background-color: #fff;
   border:1px solid #d3d3d3;
 }

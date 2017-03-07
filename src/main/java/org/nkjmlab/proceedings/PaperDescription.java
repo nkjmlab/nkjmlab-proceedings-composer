@@ -6,7 +6,7 @@ import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvEntity;
 
 @CsvEntity
-public class PaperInfo {
+public class PaperDescription {
 
 	@CsvColumn(name = "title")
 	private String title;

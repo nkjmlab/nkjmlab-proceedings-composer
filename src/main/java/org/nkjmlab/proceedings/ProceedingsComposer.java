@@ -46,7 +46,7 @@ public class ProceedingsComposer {
 		compose(readPapers(csvFile));
 	}
 
-	public void compose(List<PaperInfo> papersInfo) {
+	public void compose(List<PaperDescription> papersInfo) {
 		try {
 			Path outDir = new File(
 					"proceedings-" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
@@ -70,9 +70,9 @@ public class ProceedingsComposer {
 		}
 	}
 
-	private void procPdfs(Document document, List<PaperInfo> papersInfo, Path outDir) {
+	private void procPdfs(Document document, List<PaperDescription> papersInfo, Path outDir) {
 		int offset = 1;
-		for (PaperInfo p : papersInfo) {
+		for (PaperDescription p : papersInfo) {
 			p.startPage = offset;
 			log.debug("Start page {}", p.startPage);
 			log.debug(p.toTocItem());
@@ -81,7 +81,7 @@ public class ProceedingsComposer {
 		}
 	}
 
-	private int procPdf(PaperInfo p, int offset, Path outDir) {
+	private int procPdf(PaperDescription p, int offset, Path outDir) {
 		try (PDDocument doc = PDDocument.load(new File(p.getFilepath()))) {
 			List<?> allPages = doc.getDocumentCatalog().getAllPages();
 			PDFont font = PDType1Font.HELVETICA_BOLD;
@@ -140,7 +140,7 @@ public class ProceedingsComposer {
 
 	}
 
-	public List<PaperInfo> readPapers(String csvFile) {
+	public List<PaperDescription> readPapers(String csvFile) {
 		CsvConfig cfg = new CsvConfig();
 		cfg.setQuoteDisabled(false); // デフォルトでは無効となっている囲み文字を有効にします。
 		cfg.setIgnoreEmptyLines(true); // 空行を無視するようにします。
@@ -148,7 +148,7 @@ public class ProceedingsComposer {
 		cfg.setIgnoreTrailingWhitespaces(true); // 項目値後のホワイトスペースを除去します。
 		CsvEntityManager manager = new CsvEntityManager(cfg);
 		try {
-			return manager.load(PaperInfo.class).from(new File(csvFile));
+			return manager.load(PaperDescription.class).from(new File(csvFile));
 		} catch (IOException e) {
 			log.error(e, e);
 			throw new RuntimeException();
