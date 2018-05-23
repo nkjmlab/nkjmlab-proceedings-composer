@@ -21,9 +21,10 @@ public class PaperDescription {
 
 	public String toTocItem() {
 		String str = "<div class='paper'>\n" + "<div class='title'>"
-				+ "<a href='pdf/" + new File(getFilePath()).getName() + "'>"
+				+ "<a href='" + ProceedingsComposer.PAPERS_DIR + "/"
+				+ new File(getFilePath()).getName() + "'>"
 				+ getTitle() + "</a></div>\n" + "<div class='author'>" + getAuthor()
-				+ "</div>\n" + "<div class='start_page'>" + startPage
+				+ "</div>\n" + "<div class='start-page'>" + startPage
 				+ "</div>\n" + "</div>\n";
 		return str;
 	}

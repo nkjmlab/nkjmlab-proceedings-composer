@@ -23,6 +23,7 @@ import org.jsoup.nodes.Document;
 import org.nkjmlab.util.csv.CsvUtils;
 
 public class ProceedingsComposer {
+	static final String PAPERS_DIR = "papers/";
 	protected static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
 			.getLogger();
 
@@ -55,7 +56,7 @@ public class ProceedingsComposer {
 					"proceedings-" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
 							.format(new Date())).toPath();
 			Files.createDirectories(
-					new File(outDir.toFile(), "/papers/").toPath());
+					new File(outDir.toFile(), PAPERS_DIR).toPath());
 			FileUtils.copyInputStreamToFile(
 					ProceedingsComposer.class
 							.getResourceAsStream("/css/proceedings.css"),
@@ -115,7 +116,7 @@ public class ProceedingsComposer {
 				content.endText();
 			}
 		}
-		doc.save(new File(new File(outDir.toFile(), "papers"),
+		doc.save(new File(new File(outDir.toFile(), PAPERS_DIR),
 				new File(p.getFilePath()).getName()));
 		return doc.getNumberOfPages();
 	}
