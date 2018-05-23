@@ -1,7 +1,7 @@
 # SimpleProceedingsComposer
 
 ## 概要
-このプログラムは論文リスト(<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/sample/proceedings.csv">proceedings.csv</a>)をあたえることで，プロシーディングス(<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/proceedings-sample.zip">proceedings-sample.zip</a>)を作成するプログラムです．
+このプログラムは論文リスト(<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/sample/proceedings.csv">proceedings.csv</a>)をあたえることで，プロシーディングスを作成するプログラムです．
 
 主な機能は以下です．
 
