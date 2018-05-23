@@ -23,7 +23,7 @@ import org.jsoup.nodes.Document;
 import org.nkjmlab.util.csv.CsvUtils;
 
 public class ProceedingsComposer {
-	static final String PAPERS_DIR = "papers/";
+	static final String PAPERS_DIR = "papers";
 	protected static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
 			.getLogger();
 
