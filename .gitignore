@@ -15,6 +15,7 @@
 hs_err_pid*
 target
 
+/tmp
 /resources/proceedings.csv
 /proceedings/*
 /target/

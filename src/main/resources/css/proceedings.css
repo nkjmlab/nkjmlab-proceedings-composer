@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 .paper{
   padding: 0.5em; 0;
   clear:both;
@@ -6,65 +8,65 @@
   /*font-style: italic;*/
   float:left;
 }
-
+ 
 .start_page{
   text-align: right;
   padding-bottom: 0.2em;
   border-bottom: 1px dotted #d3d3d3;
 }
-
+ 
 .toc {
   padding: 1em;
 }
-
-
+ 
+ 
 h1, h2{
   text-align: center;
 }
-
+ 
 header a{
   text-decoration: none;
 }
-
+ 
 header img{
   border:none;
 }
-
+ 
 hr {
   border-width: 1px 0 0 0;
   border-color: #d3d3d3;
   border-style: solid;
 }
-
+ 
 .author{
   padding-left: 1em;
 }
-
+ 
 body{
   font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
   background-color: #f7f7f7;
   max-width: 900px;
   margin:auto;
+  -webkit-text-size-adjust: 100%;
 }
-
+ 
 #proceedings{
   margin: 1em;  
   background-color: #fff;
   border:1px solid #d3d3d3;
 }
-
-
+ 
+ 
 header{
   margin-top: 1em;
   padding: 1em 2em 0em 2em;
   text-align: center;
   border-bottom: 1px solid #d3d3d3;
 }
-
+ 
 footer{
   margin-top: 1em;
   padding: 1em 2em 0em 2em;
   text-align: center;
   border-top: 1px solid #d3d3d3;
 }
-
