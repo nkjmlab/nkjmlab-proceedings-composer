@@ -1,53 +1,52 @@
 # SimpleProceedingsComposer
 
 ## 概要
-このプログラムは論文リスト(<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/sample/proceedings.csv">proceedings.csv</a>)をあたえることで，プロシーディングスを作成するプログラムです．
+このプログラムは論文リスト(<a href="https://github.com/yuu-nkjm/SimpleProceedingsComposer/blob/master/sample-proceedings-src">proceedings.csv</a>)をあたえることで，プロシーディングスを作成するプログラムです．
 
 主な機能は以下です．
 
 * 複数のPDFファイルに掲載順にページ番号を書き込みます．
 * PDFファイルへのリンクを含むHTML形式の目次を作成します．
 
-### サンプルの実行
+## サンプルの実行
 1. ``compose-sample.bat``を実行して下さい．
-2. ``tmp/``以下にプロシーディングスが格納されます．
+2. ``sample-proceedings/``以下にプロシーディングスが格納されます．
 
-### クイックスタート
-1. ``sample/proceedings.csv``をコピーして，プロジェクトのルート(``compose.bat``と同じディレクトリ)に置きます．
-2. ``proceedings.csv``の2行目以下にプロシーティングスに掲載したい論文情報を**掲載順**に入れます．
-3. ``compose.bat proceedings.csv tmp/``を実行します．``tmp/``以下にプロシーディングスが格納されます．
+## クイックスタート
+1. ``sample-proceedings-src``をコピーして(e.g. proceedings-src)，プロジェクトのルート(``compose.bat``と同じディレクトリ)に置きます．
+2. ``proceedings-src/toc.csv``の2行目以下にプロシーティングスに掲載したい論文情報を**掲載順**に入れます．
+3. ``compose.bat proceedings-src/ proceedings/``を実行します．``proceedings/``以下にプロシーディングスが格納されます．
+
+## 実行
+コマンドの形式は``compose.bat proceedings-src proceedings``です．第1引数はプロシーディングス・リソースへのパスを，第2引数は出力先を表します．
+
+**出力先にあるデータは上書きされることに注意して下さい．**
+
 
 ## 使い方
-### 設定ファイルの準備
-``sample/proceedings.csv``が設定のサンプルファイルです．これをコピーして，プロシーディングスに入れたい論文情報を入力して下さい．
+### プロシーディングス・リソースの概要
+プロシーディングス・リソース以下のファイルは，``toc.csv``を除き全て出力先にコピーされます．``toc.csv``で指定したPDFファイルには，連番のページ番号が書き込まれてコピーされます．``index.html``ファイルには，目次情報が書き込まれまれてコピーされます．同名ファイルがあった場合は上書きされます．
+
+``sample-proceedings-src``がプロシーディングス・リソースのサンプルです．これをコピーして，使って下さい．
+
+#### toc.csv
+プロシーディングスに入れたい論文情報を入力して下さい．
 
 1行目はヘッダ行です．2行目以下にプロシーティングスに掲載したい論文情報を**掲載順**に入れてください．フィールドの値にカンマが含まれる場合はフィールドの値をダブルクォーテーションで囲って下さい．
 
-``filePath``フィールドには，``compose.bat``を起点とした相対パスまたは絶対パスで論文ファイルへのパスを書いて下さい．``title``フィールドには論文タイトルを，``author``フィールドには著者名を入力して下さい．
+``filePame``フィールドには，第一引数で指定した``proceedings-src``を起点とした相対パスで論文ファイルへのパスを書いて下さい．``title``フィールドには論文タイトルを，``author``フィールドには著者名を入力して下さい．
 
-以下は``sample/proceedings.csv``の中身です．
+以下は``toc.csv``のサンプル中身です．
 
 ```
 filePath,title,author
-sample/pdf/sample01.pdf,"FooBar","yuu_nkjm_1, yuu_nkjm_2"
-sample/pdf/sample11.pdf,"HogeHoge","yuu_nkjm_2, yuu_nkjm_3"
-sample/pdf/sample08.pdf,"FugaFuga","yuu_nkjm_2, 中島悠"
+papers/sample01.pdf,"FooBar","yuu_nkjm_1, yuu_nkjm_2"
+papers/sample11.pdf,"HogeHoge","yuu_nkjm_2, yuu_nkjm_3"
+papers/sample08.pdf,"FugaFuga","yuu_nkjm_2, 中島悠"
 ```
 
-### プロシーディングスの作成
-``compose.bat 論文情報ファイル 出力ディレクトリ``として実行して下さい．例えば，``compose.bat sample/proceedings.csv tmp/``のように実行します．
-
-その結果，作成日時に応じたディレクトリが出力ディレクトリ以下に作成され，その中に以下の構造でプロシーディングスが作成されます．
-
-```
-proceedings-2014-10-03_22-24-24/
-  papres/
-    foo.pdf
-    bar.pdf
-    ...
-  proceedings.css
-  index.html
-```
+#### index.html
+目次が挿入されるファイルです．``id``属性の値が``toc``の要素に目次データが挿入されます．
 
 生成されるHTML形式の目次``index.html``は，以下の様なものです．
 
@@ -69,7 +68,6 @@ proceedings-2014-10-03_22-24-24/
 </div>
 ```
 
-生成されたプロシーディングスディレクトリの``index.html``や``proceedings.css``の内容は必要に応じて書きかえて下さい．
 
 ## スクリーンショット
 <img src="http://i.gyazo.com/e3f2ee36890787cbbc7efc29b83a521f.png">

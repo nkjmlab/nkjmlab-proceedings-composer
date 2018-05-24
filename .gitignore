@@ -19,3 +19,4 @@ target
 /resources/proceedings.csv
 /proceedings/*
 /target/
+/sample*/

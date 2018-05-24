@@ -1,13 +1,9 @@
 package org.nkjmlab.proceedings;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -23,80 +19,70 @@ import org.jsoup.nodes.Document;
 import org.nkjmlab.util.csv.CsvUtils;
 
 public class ProceedingsComposer {
-	static final String PAPERS_DIR = "papers";
 	protected static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
 			.getLogger();
+
+	private static final String CSV_FILE_NAME = "toc.csv";
+	private final File resourceDir;
+	private final File outputDir;
+	private final File tocHtmlFile;
 
 	public static void main(String[] args) {
 
 		if (args.length != 2) {
 			System.out.println("[USAGE]");
 			System.out.println("compose.bat confFile outputRootDir");
-			System.out.println("e.g. compose.bat sample/proceedings.csv tmp/");
+			System.out.println("e.g. compose.bat sample-proceedings-src/ sample-proceedings/");
 			return;
 		}
 
-		String csvFile = args[0];
-		String outputRootDir = args[1];
-		new ProceedingsComposer().compose(csvFile, outputRootDir);
+		File proceedingsSrcDir = new File(args[0]);
+		File outputRootDir = new File(args[1]);
+		new ProceedingsComposer(proceedingsSrcDir, outputRootDir).compose();
 
 	}
 
-	public void compose(String csvFile, String outputRootDir) {
+	public ProceedingsComposer(File proceedingsSrcDir, File outputRootDir) {
+		this.outputDir = outputRootDir;
+		this.resourceDir = proceedingsSrcDir;
+		this.tocHtmlFile = new File(outputDir, "index.html");
+	}
+
+	public void compose() {
 		try {
-			compose(CsvUtils.readList(PaperDescription.class, new File(csvFile)), outputRootDir);
+			FileUtils.copyDirectory(resourceDir, outputDir);
+			Files.delete(Paths.get(outputDir.toString(), CSV_FILE_NAME));
+			generateTocFile();
+			log.debug("Composed proceedings is in " + outputDir);
 		} catch (Exception e) {
 			log.error(e, e);
 		}
 	}
 
-	public void compose(List<PaperDescription> papersInfo, String outputRootDir) {
+	private void generateTocFile() {
 		try {
-			Path outDir = new File(outputRootDir,
-					"proceedings-" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
-							.format(new Date())).toPath();
-			Files.createDirectories(
-					new File(outDir.toFile(), PAPERS_DIR).toPath());
-			FileUtils.copyInputStreamToFile(
-					ProceedingsComposer.class
-							.getResourceAsStream("/css/proceedings.css"),
-					new File(outDir.toFile(), "proceedings.css"));
-
-			File outFile = new File(outDir.toFile(), "index.html");
-			FileUtils.copyInputStreamToFile(
-					getClass().getResourceAsStream("/index.html"), outFile);
-
-			Document tocFile = generateTocFile(papersInfo, outFile, outDir);
-			writeResult(tocFile, outFile);
-			log.debug("Composed proceedings is in " + outDir);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private Document generateTocFile(List<PaperDescription> papersInfo, File outFile,
-			Path outDir) {
-		try {
-			Document tocFile = Jsoup.parse(outFile, "UTF-8");
+			Document tocFile = Jsoup.parse(tocHtmlFile, "UTF-8");
 			int offset = 1;
-			for (PaperDescription p : papersInfo) {
+			for (PaperDescription p : CsvUtils.readList(PaperDescription.class,
+					new File(resourceDir, CSV_FILE_NAME))) {
 				p.startPage = offset;
 				log.debug("Start page {}", p.startPage);
 				log.debug(p.toTocItem());
 				tocFile.getElementById("toc").append(p.toTocItem());
-				try (PDDocument doc = PDDocument.load(new File(p.getFilePath()))) {
-					offset += procPdf(doc, p, offset, outDir);
+				File pdfFile = new File(resourceDir, p.getFilePath());
+				try (PDDocument doc = PDDocument.load(pdfFile)) {
+					offset += procPdf(doc, p, offset);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
-			return tocFile;
+			org.nkjmlab.util.io.FileUtils.write(tocHtmlFile.toPath(), tocFile.toString());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private int procPdf(PDDocument doc, PaperDescription p, int offset, Path outDir)
+	private int procPdf(PDDocument doc, PaperDescription p, int offset)
 			throws IOException {
 		PDPageTree allPages = doc.getDocumentCatalog().getPages();
 		final PDFont font = PDType1Font.HELVETICA_BOLD;
@@ -116,8 +102,7 @@ public class ProceedingsComposer {
 				content.endText();
 			}
 		}
-		doc.save(new File(new File(outDir.toFile(), PAPERS_DIR),
-				new File(p.getFilePath()).getName()));
+		doc.save(new File(outputDir, p.getFilePath()));
 		return doc.getNumberOfPages();
 	}
 
@@ -132,15 +117,6 @@ public class ProceedingsComposer {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	private void writeResult(Document document, File outFile) {
-		try (FileWriter writer = new FileWriter(outFile)) {
-			writer.write(document.toString());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
 	}
 
 }

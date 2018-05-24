@@ -1,7 +1,5 @@
 package org.nkjmlab.proceedings;
 
-import java.io.File;
-
 import com.orangesignal.csv.annotation.CsvColumn;
 import com.orangesignal.csv.annotation.CsvEntity;
 
@@ -21,8 +19,7 @@ public class PaperDescription {
 
 	public String toTocItem() {
 		String str = "<div class='paper'>\n" + "<div class='title'>"
-				+ "<a href='" + ProceedingsComposer.PAPERS_DIR + "/"
-				+ new File(getFilePath()).getName() + "'>"
+				+ "<a href='" + filePath + "'>"
 				+ getTitle() + "</a></div>\n" + "<div class='author'>" + getAuthor()
 				+ "</div>\n" + "<div class='start-page'>" + startPage
 				+ "</div>\n" + "</div>\n";
@@ -49,7 +46,7 @@ public class PaperDescription {
 		return filePath;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFilePath(String filename) {
+		this.filePath = filename;
 	}
 }
