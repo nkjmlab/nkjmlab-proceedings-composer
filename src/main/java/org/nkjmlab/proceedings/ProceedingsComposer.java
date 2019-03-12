@@ -19,7 +19,7 @@ import org.jsoup.nodes.Document;
 import org.nkjmlab.util.csv.CsvUtils;
 
 public class ProceedingsComposer {
-	protected static org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager
+	private static org.apache.logging.log4j.Logger log = org.nkjmlab.util.log4j.LogManager
 			.getLogger();
 
 	private static final String CSV_FILE_NAME = "toc.csv";
@@ -28,8 +28,9 @@ public class ProceedingsComposer {
 	private final File tocHtmlFile;
 
 	public static void main(String[] args) {
-
 		if (args.length != 2) {
+			log.debug("debug");
+			log.info("args should be two.");
 			System.out.println("[USAGE]");
 			System.out.println("compose.bat confFile outputRootDir");
 			System.out.println("e.g. compose.bat sample-proceedings-src/ sample-proceedings/");
@@ -53,9 +54,9 @@ public class ProceedingsComposer {
 			FileUtils.copyDirectory(resourceDir, outputDir);
 			Files.delete(Paths.get(outputDir.toString(), CSV_FILE_NAME));
 			generateTocFile();
-			log.debug("Composed proceedings is in " + outputDir);
+			log.info("Composed proceedings is in " + outputDir.getAbsolutePath());
 		} catch (Exception e) {
-			log.error(e, e);
+			log.error(e.getMessage(), e);
 		}
 	}
 
