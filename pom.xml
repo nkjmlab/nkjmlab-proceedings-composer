@@ -12,7 +12,7 @@
   </scm>
   <properties>
     <nkjmlab-utils-version>0.0.4</nkjmlab-utils-version>
-    <commons-io-version>2.6</commons-io-version>
+    <commons-io-version>2.7</commons-io-version>
     <junit-version>5.3.2</junit-version>
     <log4j-version>2.14.1</log4j-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
