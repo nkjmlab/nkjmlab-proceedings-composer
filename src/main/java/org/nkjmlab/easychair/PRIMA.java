@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.nkjmlab.util.csv.CsvUtils;
+import org.nkjmlab.util.orangesignal_csv.OrangeSignalCsvUtils;
 
 public class PRIMA {
 
-  static List<Map<String, String>> papers = CsvUtils
-      .readColumnNameMapList(CsvUtils.createDefaultTsvConfig(), new File("submissions.tsv"));
-  static List<Map<String, String>> pcs =
-      CsvUtils.readColumnNameMapList(CsvUtils.createDefaultCsvConfig(), new File("pcs.csv"));
-  static List<Map<String, String>> assignments = CsvUtils
-      .readColumnNameMapList(CsvUtils.createDefaultCsvConfig(), new File("assignments.csv"));
+  static List<Map<String, String>> papers = OrangeSignalCsvUtils.readColumnNameMapList(
+      OrangeSignalCsvUtils.createDefaultTsvConfig(), new File("submissions.tsv"));
+  static List<Map<String, String>> pcs = OrangeSignalCsvUtils
+      .readColumnNameMapList(OrangeSignalCsvUtils.createDefaultCsvConfig(), new File("pcs.csv"));
+  static List<Map<String, String>> assignments = OrangeSignalCsvUtils.readColumnNameMapList(
+      OrangeSignalCsvUtils.createDefaultCsvConfig(), new File("assignments.csv"));
 
   public static void main(String[] args) {
 

@@ -15,10 +15,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.util.Matrix;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.nkjmlab.util.csv.CsvUtils;
+import org.nkjmlab.util.orangesignal_csv.OrangeSignalCsvUtils;
 
 public class ProceedingsComposer {
-  private static org.apache.logging.log4j.Logger log =
+  private static final org.apache.logging.log4j.Logger log =
       org.apache.logging.log4j.LogManager.getLogger();
 
   private static final String CSV_FILE_NAME = "toc.csv";
@@ -28,7 +28,6 @@ public class ProceedingsComposer {
 
   public static void main(String[] args) {
     if (args.length != 2) {
-      log.debug("debug");
       log.info("args should be two.");
       System.out.println("[USAGE]");
       System.out.println("compose.bat confFile outputRootDir");
@@ -63,7 +62,7 @@ public class ProceedingsComposer {
     try {
       Document tocFile = Jsoup.parse(tocHtmlFile, "UTF-8");
       int offset = 1;
-      for (PaperDescription p : CsvUtils.readList(PaperDescription.class,
+      for (PaperDescription p : OrangeSignalCsvUtils.readList(PaperDescription.class,
           new File(resourceDir, CSV_FILE_NAME))) {
         p.startPage = offset;
         log.debug("Start page {}", p.startPage);
@@ -76,7 +75,7 @@ public class ProceedingsComposer {
           throw new RuntimeException(e);
         }
       }
-      org.nkjmlab.util.io.FileUtils.write(tocHtmlFile.toPath(), tocFile.toString());
+      org.nkjmlab.util.java.io.FileUtils.write(tocHtmlFile.toPath(), tocFile.toString());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

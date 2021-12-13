@@ -5,13 +5,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.nkjmlab.util.csv.CsvUtils;
+import org.nkjmlab.util.orangesignal_csv.OrangeSignalCsvUtils;
 
 public class StatusPrinter {
-  static List<Map<String, String>> papers = CsvUtils
-      .readColumnNameMapList(CsvUtils.createDefaultTsvConfig(), new File("submissions.tsv"));
-  static List<Map<String, String>> scores =
-      CsvUtils.readColumnNameMapList(CsvUtils.createDefaultTsvConfig(), new File("status.tsv"));
+  static List<Map<String, String>> papers = OrangeSignalCsvUtils.readColumnNameMapList(
+      OrangeSignalCsvUtils.createDefaultTsvConfig(), new File("submissions.tsv"));
+  static List<Map<String, String>> scores = OrangeSignalCsvUtils
+      .readColumnNameMapList(OrangeSignalCsvUtils.createDefaultTsvConfig(), new File("status.tsv"));
 
   public static void main(String[] args) {
     List<Paper> result = scores.stream().map(score -> {
